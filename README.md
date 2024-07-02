@@ -1,73 +1,196 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# API de Gestión de Tareas
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Esta API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre tareas individuales. Permite gestionar tareas mediante rutas específicas y utilizando métodos HTTP adecuados para cada operación.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Tecnologias Utilizadas: Nestjs, TypeORM, PostgreSQL.
 
-## Description
+### Consideraciones:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Hacer npm i.
+- Crear un archivo .env en la raiz del proyecto.
+- Agregar las credenciales de la Base de datos.
 
-## Installation
+# .env.example
 
-```bash
-$ npm install
+# Configuración de la base de datos
+
+TYPE_DB=
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+
+# Configuraciones generales
+
+APP_PORT=
+
+- Levantar el proyecto con: npm run start:dev
+
+## Endpoints Disponibles
+
+### 1. Crear una tarea nueva
+
+(POST)[http://localhost:3000/api/tasks]
+
+Crea una nueva tarea con la información proporcionada en el cuerpo de la solicitud (`body`).
+
+**Body de la solicitud (JSON):**
+
+```json
+{
+  "title": "Título de la tarea",
+  "description": "Descripción detallada de la tarea"
+}
 ```
 
-## Running the app
+### 2. Buscar todas las tareas
 
-```bash
-# development
-$ npm run start
+(GET)[http://localhost:3000/api/tasks]
 
-# watch mode
-$ npm run start:dev
+**Response (JSON):**
 
-# production mode
-$ npm run start:prod
+```json
+[
+  {
+    "id": 3,
+    "title": "tarea1",
+    "description": "Descripcion1",
+    "state": "COMPLETED",
+    "createdAt": "2024-07-01T19:00:33.554Z"
+  },
+  {
+    "id": 4,
+    "title": "tarea2",
+    "description": "Descripcion2",
+    "state": "PENDING",
+    "createdAt": "2024-07-01T19:00:40.515Z"
+  }
+]
 ```
 
-## Test
+### 3. Busca una tarea por ID:
 
-```bash
-# unit tests
-$ npm run test
+### Consideraciones:
 
-# e2e tests
-$ npm run test:e2e
+- Recibe como parametro un ID de tipo numero.
 
-# test coverage
-$ npm run test:cov
+(GET)[http://localhost:3000/api/tasks/3]
+
+**Response (JSON):**
+
+```json
+
+  {
+    "id": 3,
+    "title": "tarea1",
+    "description": "Descripcion1",
+    "state": "COMPLETED",
+    "createdAt": "2024-07-01T19:00:33.554Z"
+  },
+
 ```
 
-## Support
+### 4. Actualiza una tarea por ID:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Consideraciones:
 
-## Stay in touch
+- Recibe como parametro un ID de tipo numero.
+- recibe un body con los datos a actualizar.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+(PUT)[http://localhost:3000/api/tasks/9]
 
-## License
+Información proporcionada en el cuerpo de la solicitud (`body`).
 
-Nest is [MIT licensed](LICENSE).
+**Body de la solicitud (JSON):**
+
+```json
+{
+  "title": "New Title",
+  "description": "New description"
+}
+```
+
+### 5. Elimina una tarea por ID:
+
+### Consideraciones:
+
+- Recibe como parametro un ID de tipo numero.
+
+(DELETE)[http://localhost:3000/api/tasks/5]
+
+**Response (JSON):**
+
+```json
+{
+  "message": "Task successfully deleted",
+  "task": {
+    "id": 5,
+    "title": "Tarea2",
+    "description": "Descripcion2",
+    "state": "PENDING"
+  },
+  "result": {
+    "raw": [],
+    "affected": 1
+  }
+}
+```
+
+### 6. Busca tareas filtrando por estado:
+
+### Consideraciones:
+
+- Recibe como parametro un estado de tipo string.
+
+(GET)[http://localhost:3000/api/tasks/status/PENDING]
+
+**Response (JSON):**
+
+```json
+[
+  {
+    "id": 3,
+    "title": "tarea3",
+    "description": "descripcion3",
+    "state": "PENDING",
+    "createdAt": "2024-07-02T01:40:06.471Z"
+  }
+]
+```
+
+### 7. Actualiza el estado de una tarea:
+
+### Consideraciones:
+
+- recibe un body con los datos a actualizar un id de la tarea y un estado.
+
+(PUT)[http://localhost:3000/api/tasks]
+
+Información proporcionada en el cuerpo de la solicitud (`body`).
+
+**Body de la solicitud (JSON):**
+
+```json
+{
+  "id": 9,
+  "state": "DELETED"
+}
+```
+
+### 8. Devuelve los dias transcurridos desde que se creo la tarea:
+
+### Consideraciones:
+
+- Recibe como parametro un ID de tipo numero.
+
+(GET)[http://localhost:3000/api/tasks/1/days-passed]
+
+**Response (JSON):**
+
+```json
+{
+  "date_created": "2024-07-01",
+  "past_days": 1
+}
+```
