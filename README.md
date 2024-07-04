@@ -14,7 +14,6 @@ Esta API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) s
 
 # Configuración de la base de datos
 
-TYPE_DB=
 DB_HOST=
 DB_PORT=
 DB_USER=
@@ -26,6 +25,7 @@ DB_NAME=
 APP_PORT=
 
 - Levantar el proyecto con: npm run start:dev
+- Para correr los tests : npm run test:watch
 
 ## Endpoints Disponibles
 
@@ -106,8 +106,8 @@ Información proporcionada en el cuerpo de la solicitud (`body`).
 
 ```json
 {
-  "title": "New Title",
-  "description": "New description"
+  "title": "Titulo nuevo",
+  "description": "Descripcion nueva"
 }
 ```
 
@@ -142,6 +142,7 @@ Información proporcionada en el cuerpo de la solicitud (`body`).
 ### Consideraciones:
 
 - Recibe como parametro un estado de tipo string.
+- Tipos de estado: "PENDING", "IN_PROGRESS", "COMPLETED", "DELETED".
 
 (GET)[http://localhost:3000/api/tasks/status/PENDING]
 
@@ -163,7 +164,8 @@ Información proporcionada en el cuerpo de la solicitud (`body`).
 
 ### Consideraciones:
 
-- recibe un body con los datos a actualizar un id de la tarea y un estado.
+- recibe un body con los datos a actualizar ,un id de la tarea y un estado.
+- Tipos de estado: "PENDING", "IN_PROGRESS", "COMPLETED", "DELETED"
 
 (PUT)[http://localhost:3000/api/tasks]
 
