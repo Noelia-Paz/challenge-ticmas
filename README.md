@@ -12,26 +12,30 @@ Esta API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) s
 
 # .env.example
 
-# Configuración de la base de datos
+#### .env Base de datos
 
-DB_HOST=
-DB_PORT=
-DB_USER=
-DB_PASSWORD=
-DB_NAME=
+- DB_HOST=
+- DB_PORT=
+- DB_USER=
+- DB_PASSWORD=
+- DB_NAME=
 
-# Configuraciones generales
+#### .env App
 
-APP_PORT=
+- APP_PORT=
+- BASE_URL=
+
+## Configuraciones generales
 
 - Levantar el proyecto con: npm run start:dev
-- Para correr los tests : npm run test:watch
+- Para correr los tests : npm run test
+- La ruta general de la api para peticiones se conforma de [BASE_URL/api/tasks]
 
 ## Endpoints Disponibles
 
 ### 1. Crear una tarea nueva
 
-(POST)[http://localhost:3000/api/tasks]
+(POST)[/api/tasks]
 
 Crea una nueva tarea con la información proporcionada en el cuerpo de la solicitud (`body`).
 
@@ -46,7 +50,7 @@ Crea una nueva tarea con la información proporcionada en el cuerpo de la solici
 
 ### 2. Buscar todas las tareas
 
-(GET)[http://localhost:3000/api/tasks]
+(GET)[/api/tasks]
 
 **Response (JSON):**
 
@@ -75,7 +79,7 @@ Crea una nueva tarea con la información proporcionada en el cuerpo de la solici
 
 - Recibe como parametro un ID de tipo numero.
 
-(GET)[http://localhost:3000/api/tasks/3]
+(GET)[/api/tasks/3]
 
 **Response (JSON):**
 
@@ -98,7 +102,7 @@ Crea una nueva tarea con la información proporcionada en el cuerpo de la solici
 - Recibe como parametro un ID de tipo numero.
 - recibe un body con los datos a actualizar.
 
-(PUT)[http://localhost:3000/api/tasks/9]
+(PUT)[/api/tasks/9]
 
 Información proporcionada en el cuerpo de la solicitud (`body`).
 
@@ -117,7 +121,7 @@ Información proporcionada en el cuerpo de la solicitud (`body`).
 
 - Recibe como parametro un ID de tipo numero.
 
-(DELETE)[http://localhost:3000/api/tasks/5]
+(DELETE)[/api/tasks/5]
 
 **Response (JSON):**
 
@@ -144,7 +148,7 @@ Información proporcionada en el cuerpo de la solicitud (`body`).
 - Recibe como parametro un estado de tipo string.
 - Tipos de estado: "PENDING", "IN_PROGRESS", "COMPLETED", "DELETED".
 
-(GET)[http://localhost:3000/api/tasks/status/PENDING]
+(GET)[/api/tasks/status/PENDING]
 
 **Response (JSON):**
 
@@ -167,7 +171,7 @@ Información proporcionada en el cuerpo de la solicitud (`body`).
 - recibe un body con los datos a actualizar ,un id de la tarea y un estado.
 - Tipos de estado: "PENDING", "IN_PROGRESS", "COMPLETED", "DELETED"
 
-(PUT)[http://localhost:3000/api/tasks]
+(PUT)[/api/tasks]
 
 Información proporcionada en el cuerpo de la solicitud (`body`).
 
@@ -186,7 +190,7 @@ Información proporcionada en el cuerpo de la solicitud (`body`).
 
 - Recibe como parametro un ID de tipo numero.
 
-(GET)[http://localhost:3000/api/tasks/1/days-passed]
+(GET)[/api/tasks/1/days-passed]
 
 **Response (JSON):**
 
