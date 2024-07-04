@@ -7,12 +7,12 @@ import {
   Put,
   Delete,
   ParseIntPipe,
-  Query,
 } from '@nestjs/common';
 import { TasksService } from './../services/tasks.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { UpdateStateDto } from '../dto/update-state.dto';
+import { FindTasksDto } from '../dto/find-tasks.dto';
 import { Task } from '../entities/task.entity';
 
 @Controller('api/tasks')
@@ -45,13 +45,17 @@ export class TasksController {
   }
 
   @Get('/status/:state')
-  getTasksByStatus(@Param('state') state: string) {
-    const upperCaseState = state.toUpperCase();
-    return this.tasksService.findByStatus(upperCaseState);
+  async getTasksByStatus(
+    @Param('state') state: string,
+    @Param() dto: FindTasksDto,
+  ) {
+    dto.state = state;
+    return this.tasksService.findByStatus(dto);
   }
 
   @Put()
   updateState(@Body() body: UpdateStateDto) {
+    body.state = body.state.toUpperCase();
     return this.tasksService.updateTaskStatus(body);
   }
 

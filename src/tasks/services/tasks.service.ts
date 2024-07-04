@@ -5,6 +5,7 @@ import { Task } from '../entities/task.entity';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { UpdateStateDto } from '../dto/update-state.dto';
+import { FindTasksDto } from '../dto/find-tasks.dto';
 
 @Injectable()
 export class TasksService {
@@ -17,7 +18,7 @@ export class TasksService {
   async findOne(id: number) {
     const taskFound = await this.tasksRepo.findOneBy({ id });
     if (!taskFound) {
-      return new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
     }
     return taskFound;
   }
@@ -28,7 +29,7 @@ export class TasksService {
     });
 
     if (taskFound) {
-      return new HttpException(
+      throw new HttpException(
         'There is already a task with that title',
         HttpStatus.CONFLICT,
       );
@@ -43,7 +44,7 @@ export class TasksService {
     });
 
     if (!taskFound) {
-      return new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
     }
 
     this.tasksRepo.merge(taskFound, body);
@@ -51,59 +52,31 @@ export class TasksService {
   }
 
   async delete(id: number) {
-    try {
-      const taskFound = await this.tasksRepo.findOne({
-        where: { id },
-      });
+    const taskFound = await this.tasksRepo.findOne({
+      where: { id },
+    });
 
-      if (!taskFound) {
-        throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
-      }
-
-      const result = await this.tasksRepo.delete({ id });
-
-      const response = {
-        message: 'Task successfully deleted',
-        task: taskFound,
-        result,
-      };
-
-      return response;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    if (!taskFound) {
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
     }
+
+    const result = await this.tasksRepo.delete({ id });
+
+    const response = {
+      message: 'Task successfully deleted',
+      task: taskFound,
+      result,
+    };
+
+    return response;
   }
 
-  async findByStatus(state: string): Promise<Task[]> {
-    if (!state) {
-      throw new HttpException(
-        'State must be provided.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (
-      state !== 'PENDING' &&
-      state !== 'IN_PROGRESS' &&
-      state !== 'COMPLETED' &&
-      state !== 'DELETED'
-    ) {
-      throw new HttpException(
-        'The status is not valid.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  async findByStatus(dto: FindTasksDto): Promise<Task[]> {
+    const { state } = dto;
 
     const tasksFound = await this.tasksRepo.find({ where: { state } });
 
-    if (!tasksFound.length) {
-      throw new HttpException(
-        'No tasks found with the provided state.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    return tasksFound;
+    return tasksFound ?? [];
   }
 
   async updateTaskStatus(body: UpdateStateDto) {
@@ -112,11 +85,11 @@ export class TasksService {
     });
 
     if (!taskFound) {
-      return new HttpException('Task not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
     }
 
     if (taskFound.state === body.state) {
-      return new HttpException(
+      throw new HttpException(
         'The task already has that state.',
         HttpStatus.CONFLICT,
       );
@@ -131,7 +104,7 @@ export class TasksService {
   ): Promise<{ date_created: string; past_days: number }> {
     const task = await this.tasksRepo.findOneBy({ id });
     if (!task) {
-      throw new Error('Task not found');
+      throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
     }
 
     const now = new Date();
